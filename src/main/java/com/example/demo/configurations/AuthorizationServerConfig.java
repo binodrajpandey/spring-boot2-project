@@ -19,35 +19,37 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    ClientDetails clientDetails;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	AuthenticationManager authenticationManager;
+	@Autowired
+	ClientDetails clientDetails;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        ///security.checkTokenAccess("isAuthenticated()");
-        security.allowFormAuthenticationForClients();
-    }
+	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+		/// security.checkTokenAccess("isAuthenticated()");
+		security.allowFormAuthenticationForClients();
+	}
 
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
-        clients.inMemory()
-                .withClient(clientDetails.getClientId())
-                .authorizedGrantTypes("client-credentials", "password","refresh_token")
-                .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-                .scopes("read", "write", "trust")
-                .resourceIds("oauth2-resource")
-                .accessTokenValiditySeconds(120)
-                .refreshTokenValiditySeconds(300)
-                .secret(passwordEncoder.encode(clientDetails.getSecret()));
+		clients.inMemory().withClient(clientDetails.getClientId())
+				.authorizedGrantTypes("client-credentials", "password", "refresh_token")
+				.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+				.scopes("read", "write", "trust")
+				.resourceIds("oauth2-resource")
+				.accessTokenValiditySeconds(120)
+				.refreshTokenValiditySeconds(300)
+				.secret(passwordEncoder.encode(clientDetails.getSecret()));// we have used encoder
 
-    }
+	}
 
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+	/**
+	 * Authentication manager is required for grant_type password
+	 */
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 
-        endpoints.authenticationManager(authenticationManager);
-    }
-    
+		endpoints.authenticationManager(authenticationManager);
+	}
+
 }
