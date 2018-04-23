@@ -1,0 +1,12 @@
+server.port: 8086
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: update
+    datasource:
+        url: jdbc:mysql://localhost:3306/student_db
+        username: root
+        password: mysql
+client-details: 
+    client-id: my-trusted-client
+    secret: secret
